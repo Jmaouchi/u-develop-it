@@ -27,7 +27,35 @@ app.use((req, res) => {
 
 // this will return the data from your database and exactly from the condidates table
 db.query(`SELECT * FROM candidates`, (err, rows) => {
-  console.log(rows);
+  // console.log(rows);
+});
+
+// GET a single candidate
+db.query(`SELECT * FROM candidates WHERE id = 1`, (err, row) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log(row);
+});
+
+// Delete a candidate
+db.query(`DELETE FROM candidates WHERE id = ?`, 1, (err, result) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log(result);
+});
+
+// Create a candidate
+const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected) 
+              VALUES (?,?,?,?)`; // the values should be in an array and should be 4 values
+const params = [1, 'Jugurta', 'Maouchi', 1];
+
+db.query(sql, params, (err, result) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log(result);
 });
 
 app.listen(PORT, () => {
