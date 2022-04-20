@@ -89,6 +89,7 @@ router.post('/candidate', ({ body }, res) => {
     return;
   }
 
+  // this is to insert the data into the candidates table, and we set up a params, to specify what data is going to be inserted and from where
   const sql = `INSERT INTO candidates (first_name, last_name, industry_connected)
     VALUES (?,?,?)`;
   const params = [body.first_name, body.last_name, body.industry_connected];
