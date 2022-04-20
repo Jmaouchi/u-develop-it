@@ -93,6 +93,8 @@ app.delete('/api/candidate/:id', (req, res) => {
 
 // Create a candidate
 app.post('/api/candidate', ({ body }, res) => {
+  // the inputCheck function will is like a validation function, to validate if something is misssing after trying to post data
+  // with that it will match the data inside your database table 
   const errors = inputCheck(
     body,
     'first_name',
@@ -117,6 +119,30 @@ app.post('/api/candidate', ({ body }, res) => {
       message: 'success',
       data: body
     });
+  });
+});
+
+
+// Update a candidate's party
+app.put('/api/candidate/:id', (req, res) => {
+  const sql = `UPDATE candidates SET party_id = ? 
+               WHERE id = ?`;
+  const params = [req.body.party_id, req.params.id];
+  db.query(sql, params, (err, result) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      // check if a record was found
+    } else if (!result.affectedRows) {
+      res.json({
+        message: 'Candidate not found'
+      });
+    } else {
+      res.json({
+        message: 'successsss',
+        data: req.body,
+        changes: result.affectedRows
+      });
+    }
   });
 });
 
@@ -177,28 +203,7 @@ app.delete('/api/party/:id', (req, res) => {
 
 
 
-// Update a candidate's party
-app.put('/api/candidate/:id', (req, res) => {
-  const sql = `UPDATE candidates SET party_id = ? 
-               WHERE id = ?`;
-  const params = [req.body.party_id, req.params.id];
-  db.query(sql, params, (err, result) => {
-    if (err) {
-      res.status(400).json({ error: err.message });
-      // check if a record was found
-    } else if (!result.affectedRows) {
-      res.json({
-        message: 'Candidate not found'
-      });
-    } else {
-      res.json({
-        message: 'success',
-        data: req.body,
-        changes: result.affectedRows
-      });
-    }
-  });
-});
+
 
 // Default response for any other request (Not Found)
 // make sure that this need to be always last in your code 
